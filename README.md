@@ -1,2 +1,8 @@
-# Tarea1-SO-MiniPC
-Desarrollo de la Tarea 1 del curso de Principios de Sistemas Operativos, la cual consiste en realizar un simulador de una Mini PC 
+# TAREA 1 PRINCIPIOS DE SISTEMAS OPERATIVOS "MINI PC"
+## DAVID CALVO GARCÍA 2024122451 
+
+### Estado del proyecto: 
+### Enlace del video: 
+
+
+
