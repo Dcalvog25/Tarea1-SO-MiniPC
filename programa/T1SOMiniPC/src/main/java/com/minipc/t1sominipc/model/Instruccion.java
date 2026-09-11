@@ -36,7 +36,7 @@ public class Instruccion {
         String direccionBinaria = String.format("%08d", Integer.parseInt(Integer.toBinaryString(valorDireccion)));
         return operacion + registroBinario + direccionBinaria;
     }
-    
+
 
     public String obtenerCodigoOperacion(String operador) {
         switch (operador) {
@@ -51,7 +51,7 @@ public class Instruccion {
             case "ADD":
                 return "0101";
             default:
-                return "";
+                throw new IllegalArgumentException("Operador no reconocido: " + operador);
         }
     }
 
@@ -66,7 +66,7 @@ public class Instruccion {
             case "DX":
                 return "0100";
             default:
-                return "";
+                throw new IllegalArgumentException("Operador no reconocido: " + registro);
         }
     }
 }
