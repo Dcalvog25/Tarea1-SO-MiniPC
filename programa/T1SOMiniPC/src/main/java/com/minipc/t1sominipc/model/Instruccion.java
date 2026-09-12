@@ -33,8 +33,18 @@ public class Instruccion {
     public String aBinario() {
         String operacion = obtenerCodigoOperacion(operador);
         String registroBinario = obtenerCodigoRegistro(registro);
-        String direccionBinaria = String.format("%08d", Integer.parseInt(Integer.toBinaryString(valorDireccion)));
-        return operacion + registroBinario + direccionBinaria;
+        String valorBinario = valorABinario(valorDireccion);
+        return operacion + registroBinario + valorBinario;
+    }
+
+    private String valorABinario(int valor) {
+        int signo = 0;
+        if (valor < 0) {
+            signo = 1;
+        }
+        int magnitud = Math.abs(valor);
+        String binario7bits = String.format("%7s", Integer.toBinaryString(magnitud)).replace(' ', '0');
+        return signo + binario7bits;
     }
 
 

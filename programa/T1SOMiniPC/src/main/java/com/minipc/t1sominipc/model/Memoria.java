@@ -4,6 +4,8 @@
  */
 package com.minipc.t1sominipc.model;
 
+import java.util.List;
+
 /**
  *
  * @author garci
@@ -12,7 +14,7 @@ public class Memoria {
     
     private int[] memoria;
     private String[] memoriaLabels;
-    private int tamañoTotal;
+    private int tamanoTotal;
     private int finMemoriaKernel;
     private int inicioMemoriaUsuario;
     
@@ -21,22 +23,22 @@ public class Memoria {
         this(256,64);
     }
     
-    public Memoria(int tamañoTotal, int tamañoKernel) {
-        this.tamañoTotal = tamañoTotal;
-        this.finMemoriaKernel = tamañoKernel - 1;
-        this.inicioMemoriaUsuario = tamañoKernel;
-        this.memoria = new int[tamañoTotal];
-        this.memoriaLabels = new String[tamañoTotal];
+    public Memoria(int tamanoTotal, int tamanoKernel) {
+        this.tamanoTotal = tamanoTotal;
+        this.finMemoriaKernel = tamanoKernel - 1;
+        this.inicioMemoriaUsuario = tamanoKernel;
+        this.memoria = new int[tamanoTotal];
+        this.memoriaLabels = new String[tamanoTotal];
         
-        for (int i = 0; i < tamañoTotal; i++) {
+        for (int i = 0; i < tamanoTotal; i++) {
             memoria[i] = 0; 
             memoriaLabels[i] = "";
         }
         
     }
 
-    public int getTamañoTotal() {
-        return tamañoTotal;
+    public int getTamanoTotal() {
+        return tamanoTotal;
     }
 
     public int getFinMemoriaKernel() {
@@ -56,21 +58,21 @@ public class Memoria {
     }
 
     public boolean direccionValida(int direccion) {
-        if (direccion < 0 || direccion >= tamañoTotal) {
+        if (direccion < 0 || direccion >= tamanoTotal) {
             return false;
         }
         return true;
     }
 
     public boolean direccionValidaUsuario(int direccion) {
-        if (direccion < inicioMemoriaUsuario || direccion >= tamañoTotal) {
+        if (direccion < inicioMemoriaUsuario || direccion >= tamanoTotal) {
             return false;
         }
         return true;
     }
 
     public void limpiarMemoria() {
-        for (int i = 0; i < tamañoTotal; i++) {
+        for (int i = 0; i < tamanoTotal; i++) {
             memoria[i] = 0; 
             memoriaLabels[i] = "";
         }
@@ -90,5 +92,15 @@ public class Memoria {
         memoria[direccion] = valor;
         memoriaLabels[direccion] = label;
         return true;
+    }
+    
+    public void cargarPrograma(List<Instruccion> programa) {
+        int direccion = inicioMemoriaUsuario;
+        for (Instruccion instr : programa) {
+            if (!direccionValidaUsuario(direccion)) break;
+            int valorBinario = Integer.parseInt(instr.aBinario(), 2);
+            escribir(direccion, valorBinario, instr.getLineaOriginal());
+            direccion++;
+        }
     }
 }
