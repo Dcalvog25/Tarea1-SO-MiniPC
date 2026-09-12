@@ -77,8 +77,17 @@ public class Memoria {
         for (int i = 0; i < tamanoTotal; i++) {
             memoria[i] = 0; 
             memoriaLabels[i] = "";
+            instrucciones[i] = null;
         }
     }
+
+    public void limpiarMemoriaUsuario() {
+    for (int i = inicioMemoriaUsuario; i < tamanoTotal; i++) {
+        memoria[i] = 0;
+        memoriaLabels[i] = "";
+        instrucciones[i] = null;
+    }
+}
 
     public int leer(int direccion) {
         if (!direccionValida(direccion)) {

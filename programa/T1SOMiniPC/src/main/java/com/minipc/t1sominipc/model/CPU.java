@@ -35,10 +35,10 @@ public class CPU {
     }
     
     public void cargarPrograma(List<Instruccion> programa) {
-        memoria.limpiarMemoria();
+        memoria.limpiarMemoriaUsuario();
         memoria.cargarPrograma(programa);
         inicializarRegistros();
-        bcp.actualizarEstado("Listo");
+        bcp.reiniciar(memoria.getInicioMemoriaUsuario());
     }
 
     public boolean paso() {
@@ -52,7 +52,8 @@ public class CPU {
         IR = Integer.parseInt(actual.aBinario(), 2);
         ejecutar(actual);
         PC++;
-        bcp.actualizarPC(PC);
+        bcp.actualizarEstado("Ejecutando");
+      
         bcp.avanzarContador();
         return true;
     }
@@ -138,7 +139,7 @@ public class CPU {
     }
 
     public String getIRBinario() {
-        return String.format("%8s", Integer.toBinaryString(IR)).replace(' ', '0');
+        return String.format("%16s", Integer.toBinaryString(IR)).replace(' ', '0');
     }
 
 
