@@ -13,7 +13,7 @@ public class CPU {
     private int IR; // Instruction Register
     private int AC; // Accumulator
 
-    private List<Instruccion> programa;
+   
 
     private Memoria memoria;
     private BCP bcp;
@@ -35,27 +35,20 @@ public class CPU {
     }
     
     public void cargarPrograma(List<Instruccion> programa) {
-        this.programa = programa;
+        memoria.limpiarMemoria();
+        memoria.cargarPrograma(programa);
         inicializarRegistros();
         bcp.actualizarEstado("Listo");
-    } 
+    }
 
-    public boolean paso(){
+    public boolean paso() {
+        Instruccion actual = memoria.leerInstruccion(PC); 
 
-        if(programa == null || programa.isEmpty()) {
-            return false; // No hay programa cargado
-        }
-
-        int indice = PC - memoria.getInicioMemoriaUsuario();
-
-        if (indice < 0 || indice >= programa.size()) {
+        if (actual == null) {
             bcp.actualizarEstado("Terminado");
-            return false; // No hay más instrucciones para ejecutar
+            return false;
         }
 
-        Instruccion actual = programa.get(indice);
-
-        // Ejecutar la instrucción actual
         IR = Integer.parseInt(actual.aBinario(), 2);
         ejecutar(actual);
         PC++;

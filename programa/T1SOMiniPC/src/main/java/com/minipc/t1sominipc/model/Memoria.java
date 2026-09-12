@@ -17,6 +17,7 @@ public class Memoria {
     private int tamanoTotal;
     private int finMemoriaKernel;
     private int inicioMemoriaUsuario;
+    private Instruccion[] instrucciones;
     
     public Memoria() {
         
@@ -29,6 +30,7 @@ public class Memoria {
         this.inicioMemoriaUsuario = tamanoKernel;
         this.memoria = new int[tamanoTotal];
         this.memoriaLabels = new String[tamanoTotal];
+        this.instrucciones = new Instruccion[tamanoTotal];
         
         for (int i = 0; i < tamanoTotal; i++) {
             memoria[i] = 0; 
@@ -97,10 +99,20 @@ public class Memoria {
     public void cargarPrograma(List<Instruccion> programa) {
         int direccion = inicioMemoriaUsuario;
         for (Instruccion instr : programa) {
-            if (!direccionValidaUsuario(direccion)) break;
+            if (!direccionValidaUsuario(direccion)) {
+                break;
+            }
             int valorBinario = Integer.parseInt(instr.aBinario(), 2);
             escribir(direccion, valorBinario, instr.getLineaOriginal());
+            instrucciones[direccion] = instr;
             direccion++;
         }
+    }
+
+    public Instruccion leerInstruccion(int direccion) {
+        if (!direccionValida(direccion)) {
+            return null; // Dirección inválida
+        }
+        return instrucciones[direccion];
     }
 }
