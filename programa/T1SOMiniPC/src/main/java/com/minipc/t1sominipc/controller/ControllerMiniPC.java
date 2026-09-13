@@ -24,6 +24,7 @@ public class ControllerMiniPC {
     private MiniPCFrame vista;
 
     private List<Instruccion> programaActual;
+    private boolean procesoAdmitido = false; // true una vez que ya se escribió a RAM
 
     public ControllerMiniPC(MiniPCFrame vista) {
         this.vista = vista;
@@ -35,7 +36,7 @@ public class ControllerMiniPC {
 
     private void inicializarMaquina(int tamanoRAM, int tamanoKernel) {
         memoria = new Memoria(tamanoRAM, tamanoKernel);
-        bcp = new BCP(memoria, 1, memoria.getInicioMemoriaUsuario());
+        bcp = new BCP(memoria,  1, memoria.getInicioMemoriaUsuario());
         cpu = new CPU(memoria, bcp);
     }
 
@@ -47,7 +48,16 @@ public class ControllerMiniPC {
         vista.getBtnAplicarConfig().addActionListener(e -> aplicarConfiguracion());
     }
 
+    // ===================== CARGA: SOLO RECONOCE, NO TOCA MEMORIA =====================
+
     private void cargarArchivo() {
+        if (procesoHayQueResetear()) {
+            JOptionPane.showMessageDialog(vista,
+                    "Hay un proceso activo. Da clic en 'Limpiar / Reset' antes de cargar otro archivo.",
+                    "Proceso en curso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         JFileChooser chooser = new JFileChooser();
         chooser.setFileFilter(new FileNameExtensionFilter("Archivos ASM", "asm"));
         int resultado = chooser.showOpenDialog(vista);
@@ -62,12 +72,16 @@ public class ControllerMiniPC {
             List<String> lineas = Files.readAllLines(archivo.toPath());
             programaActual = parser.convertirASM(lineas);
 
-            cpu.cargarPrograma(programaActual);
-
             actualizarTablaPrograma();
-            actualizarTablaMemoria();
-            actualizarVista();
+            bcp.actualizarEstado("Nuevo");
             vista.getLblPID().setText("PID 1");
+            vista.getLblEstadoProceso().setText("Preparando memoria para el proceso...");
+
+            deshabilitarTodosLosBotones();
+
+            Timer timerAdmision = new Timer(900, e -> completarAdmision());
+            timerAdmision.setRepeats(false);
+            timerAdmision.start();
 
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(vista,
@@ -80,6 +94,39 @@ public class ControllerMiniPC {
         }
     }
 
+    private void completarAdmision() {
+        cpu.cargarPrograma(programaActual);
+        bcp.actualizarEstado("Listo");
+        actualizarTablaMemoria();
+        procesoAdmitido = true;
+
+        vista.getBtnPasoAPaso().setEnabled(true);
+        vista.getBtnEjecutarTodo().setEnabled(true);
+        vista.getBtnLimpiarReset().setEnabled(true);
+        // btnCargarArchivo y btnConfigurarMemoria siguen deshabilitados: ya hay un proceso en RAM
+
+        actualizarVista();
+    }
+
+    private void deshabilitarTodosLosBotones() {
+        vista.getBtnCargarArchivo().setEnabled(false);
+        vista.getBtnPasoAPaso().setEnabled(false);
+        vista.getBtnEjecutarTodo().setEnabled(false);
+        vista.getBtnConfigurarMemoria().setEnabled(false);
+        vista.getBtnLimpiarReset().setEnabled(false);
+    }
+
+    // =====================c AQUÍ SÍ SE ESCRIBE A MEMORIA =====================
+
+    private void admitirProceso() {
+        cpu.cargarPrograma(programaActual); // escribe a Memoria y pone estado "Listo"
+        actualizarTablaMemoria();
+        procesoAdmitido = true;
+        vista.getBtnConfigurarMemoria().setEnabled(false); // se bloquea mientras el proceso está activo
+    }
+
+    // ===================== EJECUCIÓN =====================
+
     private void ejecutarPaso() {
         if (programaActual == null) {
             JOptionPane.showMessageDialog(vista, "Primero carga un archivo .asm",
@@ -87,10 +134,12 @@ public class ControllerMiniPC {
             return;
         }
 
-        boolean continua = cpu.paso();
+        boolean continua = cpu.paso(); // internamente ya pone "Ejecutando" antes de correr
         actualizarVista();
 
         if (!continua) {
+            vista.getBtnConfigurarMemoria().setEnabled(true);
+            vista.getBtnCargarArchivo().setEnabled(true);
             JOptionPane.showMessageDialog(vista, "Programa terminado",
                     "Ejecución finalizada", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -108,15 +157,27 @@ public class ControllerMiniPC {
             continua = cpu.paso();
         }
         actualizarVista();
+        vista.getBtnConfigurarMemoria().setEnabled(true);
+        vista.getBtnCargarArchivo().setEnabled(true);
     }
+
+    // ===================== RESET Y CONFIGURACIÓN =====================
 
     private void limpiarTodo() {
         inicializarMaquina(memoria.getTamanoTotal(), memoria.getInicioMemoriaUsuario());
         programaActual = null;
+        procesoAdmitido = false;
 
         vista.getModeloPrograma().setRowCount(0);
         vista.getModeloMemoria().setRowCount(0);
         vista.getLblPID().setText("PID --");
+
+        vista.getBtnCargarArchivo().setEnabled(true);
+        vista.getBtnPasoAPaso().setEnabled(true);
+        vista.getBtnEjecutarTodo().setEnabled(true);
+        vista.getBtnConfigurarMemoria().setEnabled(true);
+        vista.getBtnLimpiarReset().setEnabled(true);
+
         actualizarVista();
     }
 
@@ -131,13 +192,22 @@ public class ControllerMiniPC {
             return;
         }
 
+        
+
         inicializarMaquina(nuevoTamano, nuevoKernel);
         programaActual = null;
+        procesoAdmitido = false;
 
         vista.getModeloPrograma().setRowCount(0);
         vista.getModeloMemoria().setRowCount(0);
         vista.getLblPID().setText("PID --");
         actualizarVista();
+    }
+
+    // ===================== EXTRAS =====================
+
+    private boolean procesoHayQueResetear() {
+        return procesoAdmitido && !"Terminado".equals(bcp.getEstado());
     }
 
     private void actualizarTablaPrograma() {

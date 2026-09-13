@@ -323,7 +323,7 @@ public class MiniPCFrame extends JFrame {
         return lbl;
     }
 
-    // ===================== HELPERS DE ESTILO =====================
+    // ===================== EXTRAS DE ESTILO =====================
 
     private JLabel crearEtiquetaSeccion(String texto) {
         JLabel lbl = new JLabel(texto);
@@ -350,26 +350,65 @@ public class MiniPCFrame extends JFrame {
         return btn;
     }
 
-    // ===================== GETTERS PARA EL CONTROLLER =====================
+    // ===================== PARA EL CONTROLLER =====================
 
-    public JButton getBtnCargarArchivo() { return btnCargarArchivo; }
-    public JButton getBtnPasoAPaso() { return btnPasoAPaso; }
-    public JButton getBtnEjecutarTodo() { return btnEjecutarTodo; }
-    public JButton getBtnLimpiarReset() { return btnLimpiarReset; }
-    public JButton getBtnAplicarConfig() { return btnAplicarConfig; }
-    public JSpinner getSpinnerTamanoRAM() { return spinnerTamanoRAM; }
-    public JSpinner getSpinnerKernel() { return spinnerKernel; }
-    public DefaultTableModel getModeloPrograma() { return modeloPrograma; }
-    public DefaultTableModel getModeloMemoria() { return modeloMemoria; }
-    public JLabel getLblPID() { return lblPID; }
-    public JLabel getLblEstadoProceso() { return lblEstadoProceso; }
-    public JLabel getLblPC() { return lblPC; }
-    public JLabel getLblIR() { return lblIR; }
-    public JLabel getLblAC() { return lblAC; }
-    public JLabel getLblAX() { return lblAX; }
-    public JLabel getLblBX() { return lblBX; }
-    public JLabel getLblCX() { return lblCX; }
-    public JLabel getLblDX() { return lblDX; }
+    public JButton getBtnCargarArchivo() { 
+        return btnCargarArchivo; 
+    }
+    public JButton getBtnPasoAPaso() { 
+        return btnPasoAPaso; 
+    }
+    public JButton getBtnEjecutarTodo() { 
+        return btnEjecutarTodo; 
+    }
+    public JButton getBtnLimpiarReset() { 
+        return btnLimpiarReset; 
+    }
+    public JButton getBtnAplicarConfig() { 
+        return btnAplicarConfig; 
+    }
+    public JButton getBtnConfigurarMemoria() { 
+        return btnConfigurarMemoria; 
+    }
+    public JSpinner getSpinnerTamanoRAM() { 
+        return spinnerTamanoRAM; 
+    }
+    public JSpinner getSpinnerKernel() { 
+        return spinnerKernel; 
+    }
+    public DefaultTableModel getModeloPrograma() { 
+        return modeloPrograma; 
+    }
+    public DefaultTableModel getModeloMemoria() { 
+        return modeloMemoria; 
+    }
+    public JLabel getLblPID() { 
+        return lblPID; 
+    }
+    public JLabel getLblEstadoProceso() { 
+        return lblEstadoProceso; 
+    }
+    public JLabel getLblPC() { 
+        return lblPC; 
+    }
+    public JLabel getLblIR() { 
+        return lblIR; 
+    }
+    public JLabel getLblAC() { 
+        return lblAC; 
+    }
+    public JLabel getLblAX() { 
+        return lblAX; 
+    }
+    public JLabel getLblBX() { 
+        return lblBX; 
+    }
+    public JLabel getLblCX() { 
+        return lblCX; 
+    }
+    public JLabel getLblDX() { 
+        return lblDX; 
+    }
 
     // Prueba rápida de solo la vista, sin Controller todavía
     public static void main(String[] args) {
