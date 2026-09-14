@@ -1,5 +1,9 @@
 package com.minipc.t1sominipc.model;
 
+/**
+ * BCP (Base Control Process) representa el proceso en ejecución.
+ */
+
 public class BCP {
 
     private static final int POS_PID = 0;
@@ -15,6 +19,11 @@ public class BCP {
     private static final int TAM_BCP = 10; 
 
     private Memoria memoria;
+
+    /*
+     * El BCP se almacena en la memoria, en una posición específica.
+     * Cada campo del BCP ocupa una posición en la memoria.
+     */
 
     public BCP(Memoria memoria, int pid, int baseUsuario) {
         this.memoria = memoria;
@@ -34,6 +43,12 @@ public class BCP {
         memoria.escribir(POS_CONTADOR, 0, "Contador");
     }
 
+    /*
+        * Nombre: actualizarRegistros
+        *Entrada: int pc, int ac, int ax, int bx, int cx, int dx
+        *Salida: void
+        *Descripción: Actualiza los registros del BCP en la memoria con los valores proporcionados.
+     */
     public void actualizarRegistros(int pc, int ac, int ax, int bx, int cx, int dx) {
         memoria.escribir(POS_PC, pc, "PC");
         memoria.escribir(POS_AC, ac, "AC");
@@ -44,23 +59,54 @@ public class BCP {
     }
 
 
+    /*
+        * Nombre: actualizarEstado
+        *Entrada: String estado
+        *Salida: void
+        *Descripción: Actualiza el estado del BCP en la memoria con el valor proporcionado.
+     */
+
     public void actualizarEstado(String estado) {
         memoria.escribir(POS_ESTADO, estadoACodigo(estado), "Estado");
     }
 
+    /*
+        * Nombre: avanzarContador
+        *Entrada: void
+        *Salida: void
+        *Descripción: Incrementa el contador de instrucciones del BCP en la memoria.
+     */
     public void avanzarContador() {
         int actual = memoria.leer(POS_CONTADOR);
         memoria.escribir(POS_CONTADOR, actual + 1, "Contador");
     }
 
+    /*
+        * Nombre: getContadorInstrucciones
+        *Entrada: void
+        *Salida: int
+        *Descripción: Devuelve el valor del contador de instrucciones del BCP desde la memoria.
+     */
     public int getContadorInstrucciones() {
         return memoria.leer(POS_CONTADOR);
     }
 
+    /*
+        * Nombre: getEstado
+        *Entrada: void
+        *Salida: String
+        *Descripción: Devuelve el estado del BCP desde la memoria.
+     */
     public String getEstado() {
         return codigoAEstado(memoria.leer(POS_ESTADO));
     }
    
+    /*
+        * Nombre: reiniciar
+        *Entrada: int baseUsuario
+        *Salida: void
+        *Descripción: Reinicia el BCP en la memoria con los valores iniciales.
+     */
     public void reiniciar(int baseUsuario) {
         memoria.escribir(POS_ESTADO, 1, "Estado");   // 1 = Listo directamente
         memoria.escribir(POS_PC, baseUsuario, "PC");
@@ -73,6 +119,12 @@ public class BCP {
         memoria.escribir(POS_CONTADOR, 0, "Contador");
     }
 
+    /*
+        * Nombre: estadoACodigo
+        *Entrada: String estado
+        *Salida: int
+        *Descripción: Convierte un estado en su código correspondiente.
+     */
     private int estadoACodigo(String estado) {
         switch (estado) {
             case "Nuevo": 
@@ -87,6 +139,13 @@ public class BCP {
                 throw new IllegalArgumentException("Estado no reconocido: " + estado);
         }
     }
+
+    /*
+        * Nombre: codigoAEstado
+        *Entrada: int codigo
+        *Salida: String
+        *Descripción: Convierte un código en su estado correspondiente.
+     */
 
     private String codigoAEstado(int codigo) {
         switch (codigo) {

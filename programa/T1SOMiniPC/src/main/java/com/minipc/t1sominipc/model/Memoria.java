@@ -10,6 +10,11 @@ import java.util.List;
  *
  * @author garci
  */
+
+/*
+ * Nombre: Memoria
+ * Descripción: Clase que representa la memoria del procesador.
+ */
 public class Memoria {
     
     private int[] memoria;
@@ -19,10 +24,23 @@ public class Memoria {
     private int inicioMemoriaUsuario;
     private Instruccion[] instrucciones;
     
+    /*
+        * Nombre: Memoria
+        * Descripción: Constructor de la clase Memoria.
+        * Entrada: void
+        * Salida: void
+     */
     public Memoria() {
         
         this(256,64);
     }
+
+    /*
+        * Nombre: Memoria
+        * Descripción: Constructor de la clase Memoria.
+        * Entrada: int tamanoTotal, int tamanoKernel
+        * Salida: void
+     */
     
     public Memoria(int tamanoTotal, int tamanoKernel) {
         this.tamanoTotal = tamanoTotal;
@@ -39,26 +57,67 @@ public class Memoria {
         
     }
 
+    /*
+        * Nombre: getTamanoTotal
+        *Entrada: void
+        *Salida: int
+        *Descripción: Devuelve el tamaño total de la memoria.
+     */
+
     public int getTamanoTotal() {
         return tamanoTotal;
     }
+
+    /*
+        * Nombre: getFinMemoriaKernel
+        *Entrada: void
+        *Salida: int
+        *Descripción: Devuelve la posición final de la memoria del kernel.
+     */
 
     public int getFinMemoriaKernel() {
         return finMemoriaKernel;
     }
 
+    /*
+        * Nombre: getInicioMemoriaUsuario
+        *Entrada: void
+        *Salida: int
+        *Descripción: Devuelve la posición inicial de la memoria de usuario.
+     */
+
     public int getInicioMemoriaUsuario() {
         return inicioMemoriaUsuario;
     }
 
+    /*
+        * Nombre: getMemoria
+        *Entrada: void
+        *Salida: int[]
+        *Descripción: Devuelve el array de la memoria.
+     */
     public int[] getMemoria() {
         return memoria;
     }
+
+    /*
+        * Nombre: getMemoriaLabels
+        *Entrada: void
+        *Salida: String[]
+        *Descripción: Devuelve el array de labels de la memoria.
+     */
 
     public String[] getMemoriaLabels() {
         return memoriaLabels;
     }
 
+
+    /*
+        * Nombre: direccionValida
+        *Entrada: int direccion
+        *Salida: boolean
+        *Descripción: Verifica si una dirección es válida.
+     */
     public boolean direccionValida(int direccion) {
         if (direccion < 0 || direccion >= tamanoTotal) {
             return false;
@@ -66,12 +125,25 @@ public class Memoria {
         return true;
     }
 
+    /*
+        * Nombre: direccionValidaUsuario
+        *Entrada: int direccion
+        *Salida: boolean
+        *Descripción: Verifica si una dirección es válida para la memoria de usuario.
+     */
     public boolean direccionValidaUsuario(int direccion) {
         if (direccion < inicioMemoriaUsuario || direccion >= tamanoTotal) {
             return false;
         }
         return true;
     }
+
+    /*
+        * Nombre: limpiarMemoria
+        *Entrada: void
+        *Salida: void
+        *Descripción: Limpia toda la memoria, estableciendo todos los valores a 0 y labels a vacío.
+     */
 
     public void limpiarMemoria() {
         for (int i = 0; i < tamanoTotal; i++) {
@@ -81,13 +153,19 @@ public class Memoria {
         }
     }
 
+    /*
+        * Nombre: limpiarMemoriaUsuario
+        *Entrada: void
+        *Salida: void
+        *Descripción: Limpia la memoria de usuario, estableciendo todos los valores a 0 y labels a vacío.
+     */
     public void limpiarMemoriaUsuario() {
-    for (int i = inicioMemoriaUsuario; i < tamanoTotal; i++) {
-        memoria[i] = 0;
-        memoriaLabels[i] = "";
-        instrucciones[i] = null;
+        for (int i = inicioMemoriaUsuario; i < tamanoTotal; i++) {
+            memoria[i] = 0;
+            memoriaLabels[i] = "";
+            instrucciones[i] = null;
+        }
     }
-}
 
     public int leer(int direccion) {
         if (!direccionValida(direccion)) {
@@ -95,7 +173,13 @@ public class Memoria {
         }
         return memoria[direccion];
     }
-
+    
+    /*
+        * Nombre: escribir
+        *Entrada: int direccion, int valor, String label
+        *Salida: boolean
+        *Descripción: Escribe un valor en una dirección de memoria.
+     */
     public boolean escribir(int direccion, int valor, String label) {
         if (!direccionValida(direccion)) {
             return false; // Dirección inválida
@@ -105,13 +189,25 @@ public class Memoria {
         return true;
     }
 
+    /*
+        * Nombre: getLabel
+        *Entrada: int direccion
+        *Salida: String
+        *Descripción: Devuelve el label asociado a una dirección de memoria.
+     */
     public String getLabel(int direccion) {
-    if (!direccionValida(direccion)) {
-        return "";
+        if (!direccionValida(direccion)) {
+            return "";
+        }
+        return memoriaLabels[direccion];
     }
-    return memoriaLabels[direccion];
-}
     
+    /*
+        * Nombre: cargarPrograma
+        *Entrada: List<Instruccion> programa
+        *Salida: void
+        *Descripción: Carga un programa en la memoria.
+     */
     public void cargarPrograma(List<Instruccion> programa) {
 
         if(programa.size() > (tamanoTotal - inicioMemoriaUsuario)){
@@ -129,6 +225,12 @@ public class Memoria {
         }
     }
 
+    /*
+        * Nombre: leerInstruccion
+        *Entrada: int direccion
+        *Salida: Instruccion
+        *Descripción: Lee una instrucción de una dirección de memoria.
+     */
     public Instruccion leerInstruccion(int direccion) {
         if (!direccionValida(direccion)) {
             return null; // Dirección inválida

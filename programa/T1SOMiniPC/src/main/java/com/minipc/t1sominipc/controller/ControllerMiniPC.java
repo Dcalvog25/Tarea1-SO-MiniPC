@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
+/**
+ * Controlador principal de la aplicación MiniPC.
+ */
 public class ControllerMiniPC {
 
     private Memoria memoria;
@@ -26,6 +29,12 @@ public class ControllerMiniPC {
     private List<Instruccion> programaActual;
     private boolean procesoAdmitido = false; // true una vez que ya se escribió a RAM
 
+    /*
+        * Nombre: ControllerMiniPC
+        *Entrada: MiniPCFrame vista
+        *Salida: void
+        *Descripción: Constructor del controlador.
+     */
     public ControllerMiniPC(MiniPCFrame vista) {
         this.vista = vista;
         this.parser = new ConvertidorASM();
@@ -34,12 +43,24 @@ public class ControllerMiniPC {
         actualizarVista();
     }
 
+    /*
+        * Nombre: inicializarMaquina
+        *Entrada: int tamanoRAM, int tamanoKernel
+        *Salida: void
+        *Descripción: Inicializa la máquina con los parámetros especificados.
+     */
     private void inicializarMaquina(int tamanoRAM, int tamanoKernel) {
         memoria = new Memoria(tamanoRAM, tamanoKernel);
         bcp = new BCP(memoria,  1, memoria.getInicioMemoriaUsuario());
         cpu = new CPU(memoria, bcp);
     }
 
+    /*
+        * Nombre: registrarEventos
+        *Entrada: void
+        *Salida: void
+        *Descripción: Registra los eventos de la vista.
+     */
     private void registrarEventos() {
         vista.getBtnCargarArchivo().addActionListener(e -> cargarArchivo());
         vista.getBtnPasoAPaso().addActionListener(e -> ejecutarPaso());
@@ -50,6 +71,12 @@ public class ControllerMiniPC {
 
     // ===================== CARGA: SOLO RECONOCE, NO TOCA MEMORIA =====================
 
+    /*
+        * Nombre: cargarArchivo
+        *Entrada: void
+        *Salida: void
+        *Descripción: Carga un archivo ASM, lo convierte a instrucciones y maneja errores de validación.
+     */
     private void cargarArchivo() {
         if (procesoHayQueResetear()) {
             JOptionPane.showMessageDialog(vista,
@@ -114,6 +141,13 @@ public class ControllerMiniPC {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    /*
+        * Nombre: completarAdmision
+        *Entrada: void
+        *Salida: void
+        *Descripción: Completa el proceso de admisión del programa.
+     */
     private void completarAdmision() {
         try {
             cpu.cargarPrograma(programaActual);
@@ -145,6 +179,12 @@ public class ControllerMiniPC {
         }
     }
 
+    /*
+        * Nombre: deshabilitarTodosLosBotones
+        *Entrada: void
+        *Salida: void
+        *Descripción: Deshabilita todos los botones de la interfaz.
+     */
     private void deshabilitarTodosLosBotones() {
         vista.getBtnCargarArchivo().setEnabled(false);
         vista.getBtnPasoAPaso().setEnabled(false);
@@ -153,17 +193,16 @@ public class ControllerMiniPC {
         vista.getBtnLimpiarReset().setEnabled(false);
     }
 
-    // =====================c AQUÍ SÍ SE ESCRIBE A MEMORIA =====================
-
-    private void admitirProceso() {
-        cpu.cargarPrograma(programaActual); // escribe a Memoria y pone estado "Listo"
-        actualizarTablaMemoria();
-        procesoAdmitido = true;
-        vista.getBtnConfigurarMemoria().setEnabled(false); // se bloquea mientras el proceso está activo
-    }
+    
 
     // ===================== EJECUCIÓN =====================
 
+    /*
+        * Nombre: ejecutarPaso
+        *Entrada: void
+        *Salida: void
+        *Descripción: Ejecuta un paso del programa.
+     */
     private void ejecutarPaso() {
         if (programaActual == null) {
             JOptionPane.showMessageDialog(vista, "Primero carga un archivo .asm",
@@ -182,6 +221,12 @@ public class ControllerMiniPC {
         }
     }
 
+    /*
+        * Nombre: ejecutarTodo
+        *Entrada: void
+        *Salida: void
+        *Descripción: Ejecuta todo el programa.
+     */
     private void ejecutarTodo() {
         if (programaActual == null) {
             JOptionPane.showMessageDialog(vista, "Primero carga un archivo .asm",
@@ -200,6 +245,12 @@ public class ControllerMiniPC {
 
     // ===================== RESET Y CONFIGURACIÓN =====================
 
+    /*
+        * Nombre: limpiarTodo
+        *Entrada: void
+        *Salida: void
+        *Descripción: Limpia toda la máquina y reinicia la interfaz.
+     */
     private void limpiarTodo() {
         inicializarMaquina(memoria.getTamanoTotal(), memoria.getInicioMemoriaUsuario());
         programaActual = null;
@@ -218,6 +269,12 @@ public class ControllerMiniPC {
         actualizarVista();
     }
 
+    /*
+        * Nombre: aplicarConfiguracion
+        *Entrada: void
+        *Salida: void
+        *Descripción: Aplica la configuración de la memoria.
+     */
     private void aplicarConfiguracion() {
         int nuevoTamano = (Integer) vista.getSpinnerTamanoRAM().getValue();
         int nuevoKernel = (Integer) vista.getSpinnerKernel().getValue();
@@ -248,10 +305,22 @@ public class ControllerMiniPC {
 
     // ===================== EXTRAS =====================
 
+    /*
+        * Nombre: procesoHayQueResetear
+        *Entrada: void
+        *Salida: boolean
+        *Descripción: Verifica si el proceso actual necesita ser reiniciado.
+     */
     private boolean procesoHayQueResetear() {
         return procesoAdmitido && !"Terminado".equals(bcp.getEstado());
     }
 
+    /*
+        * Nombre: actualizarTablaPrograma
+        *Entrada: void
+        *Salida: void
+        *Descripción: Actualiza la tabla del programa.
+     */
     private void actualizarTablaPrograma() {
         DefaultTableModel modelo = vista.getModeloPrograma();
         modelo.setRowCount(0);
@@ -260,6 +329,12 @@ public class ControllerMiniPC {
         }
     }
 
+    /*
+        * Nombre: actualizarTablaMemoria
+        *Entrada: void
+        *Salida: void
+        *Descripción: Actualiza la tabla de la memoria.
+     */
     private void actualizarTablaMemoria() {
         DefaultTableModel modelo = vista.getModeloMemoria();
         modelo.setRowCount(0);
@@ -303,6 +378,13 @@ public class ControllerMiniPC {
         }
     }
 
+    /*
+        * Nombre: actualizarVista
+        *Entrada: void
+        *Salida: void
+        *Descripción: Actualiza la vista de la interfaz.
+     */
+
     private void actualizarVista() {
         vista.getLblPC().setText(String.valueOf(cpu.getPC()));
         vista.getLblIR().setText(cpu.getIRBinario());
@@ -316,6 +398,13 @@ public class ControllerMiniPC {
         actualizarTablaMemoria();
     }
 
+    /*
+        * Nombre: formatearBinario
+        *Entrada: String binario
+        *Salida: String
+        *Descripción: Formatea un número binario para su visualización.
+     */
+
     private String formatearBinario(String binario) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < binario.length(); i++) {
@@ -327,6 +416,12 @@ public class ControllerMiniPC {
         return sb.toString();
     }
 
+    /*
+        * Nombre: formatoValorMemoria
+        *Entrada: int valor
+        *Salida: String
+        *Descripción: Formatea un valor de memoria para su visualización.
+     */
     private String formatoValorMemoria(int valor) {
         String binario = String.format("%16s", Integer.toBinaryString(valor)).replace(' ', '0');
         return formatearBinario(binario);

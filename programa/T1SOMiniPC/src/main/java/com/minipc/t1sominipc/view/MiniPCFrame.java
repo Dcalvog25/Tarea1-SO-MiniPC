@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/*
+ * Nombre: MiniPCFrame
+ * Descripción: Ventana principal de la aplicación Mini PC Simulator.
+ */
 public class MiniPCFrame extends JFrame {
 
     // Paleta de colores - azul oscuro
@@ -38,6 +42,10 @@ public class MiniPCFrame extends JFrame {
     private JLabel lblEstadoProceso;
     private JLabel lblPC, lblIR, lblAC, lblAX, lblBX, lblCX, lblDX;
 
+    /*
+     * Nombre: MiniPCFrame
+     * Descripción: Ventana principal de la aplicación Mini PC Simulator.
+     */
     public MiniPCFrame() {
         setTitle("Mini PC Simulator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -63,6 +71,10 @@ public class MiniPCFrame extends JFrame {
 
     // ===================== ENCABEZADO =====================
 
+    /*
+     * Nombre: crearEncabezado
+     * Descripción: Crea el encabezado de la ventana principal.
+     */
     private JPanel crearEncabezado() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(BG_DARK);
@@ -83,7 +95,10 @@ public class MiniPCFrame extends JFrame {
     }
 
     // ===================== BARRA DE BOTONES HORIZONTAL =====================
-
+    /*
+     * Nombre: crearBarraBotones
+     * Descripción: Crea la barra de botones horizontal.
+     */
     private JPanel crearBarraBotones() {
         JPanel panel = new JPanel(new GridLayout(1, 5, 10, 0));
         panel.setBackground(BG_DARK);
@@ -109,6 +124,10 @@ public class MiniPCFrame extends JFrame {
 
     // ===================== VENTANA EMERGENTE DE CONFIGURACIÓN =====================
 
+    /*
+     * Nombre: crearDialogoConfigMemoria
+     * Descripción: Crea el diálogo de configuración de memoria.
+     */
     private void crearDialogoConfigMemoria() {
         dialogoConfigMemoria = new JDialog(this, "Configurar memoria", true);
         dialogoConfigMemoria.setSize(320, 260);
@@ -155,6 +174,11 @@ public class MiniPCFrame extends JFrame {
         dialogoConfigMemoria.add(panel);
     }
 
+    /*
+     * Nombre: crearPanelCentral
+     * Descripción: Crea el panel central con las tablas de programa y memoria.
+     */
+
     // ===================== TABLAS CENTRALES =====================
 
     private JPanel crearPanelCentral() {
@@ -166,6 +190,11 @@ public class MiniPCFrame extends JFrame {
 
         return panel;
     }
+
+    /*
+     * Nombre: crearPanelPrograma
+     * Descripción: Crea el panel con la tabla del programa cargado.
+     */
 
     private JPanel crearPanelPrograma() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
@@ -189,6 +218,10 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearPanelMemoria
+     * Descripción: Crea el panel con la tabla de la memoria principal.
+     */
     private JPanel crearPanelMemoria() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
         panel.setBackground(BG_DARK);
@@ -211,6 +244,10 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearTablaEstilizada
+     * Descripción: Crea una tabla con un estilo específico.
+     */
     private JTable crearTablaEstilizada(DefaultTableModel modelo) {
         JTable tabla = new JTable(modelo);
         tabla.setBackground(BG_CARD);
@@ -231,6 +268,10 @@ public class MiniPCFrame extends JFrame {
 
     // ===================== PANEL DE PROCESO =====================
 
+    /*
+     * Nombre: crearPanelProceso
+     * Descripción: Crea el panel con la información del proceso actual.
+     */
     private JPanel crearPanelProceso() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -250,6 +291,10 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearTarjetaProceso
+     * Descripción: Crea la tarjeta con la información del proceso actual.
+     */
     private JPanel crearTarjetaProceso() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -273,6 +318,10 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearGridRegistros
+     * Descripción: Crea el grid con los registros de la CPU.
+     */ 
     private JPanel crearGridRegistros() {
         JPanel panel = new JPanel(new GridLayout(4, 2, 8, 8));
         panel.setBackground(BG_DARK);
@@ -298,6 +347,10 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearTarjetaRegistro
+     * Descripción: Crea una tarjeta para un registro específico.
+     */
     private JPanel crearTarjetaRegistro(String nombre, JLabel valor) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -313,6 +366,11 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
+    /*
+     * Nombre: crearValorRegistro
+     * Descripción: Crea un JLabel estilizado para mostrar el valor de un registro.
+     */
+
     private JLabel crearValorRegistro(int tamanoFuente) {
         JLabel lbl = new JLabel("0");
         lbl.setFont(new Font("Monospaced", Font.BOLD, tamanoFuente));
@@ -322,6 +380,10 @@ public class MiniPCFrame extends JFrame {
 
     // ===================== HELPERS DE ESTILO =====================
 
+    /*
+     * Nombre: crearEtiquetaSeccion
+     * Descripción: Crea una etiqueta para una sección específica.
+     */
     private JLabel crearEtiquetaSeccion(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -330,12 +392,21 @@ public class MiniPCFrame extends JFrame {
         return lbl;
     }
 
+    /*
+     * Nombre: crearEtiquetaCampo
+     * Descripción: Crea una etiqueta para un campo específico.
+     */
     private JLabel crearEtiquetaCampo(String texto) {
         JLabel lbl = new JLabel(texto);
         lbl.setFont(new Font("SansSerif", Font.PLAIN, 11));
         lbl.setForeground(TEXT_MUTED);
         return lbl;
     }
+
+    /*
+     * Nombre: crearBoton
+     * Descripción: Crea un botón estilizado.
+     */
 
     private JButton crearBoton(String texto, Color fondo, Color textoColor) {
         JButton btn = new JButton(texto);
@@ -349,6 +420,10 @@ public class MiniPCFrame extends JFrame {
 
     // ===================== EXTRAS PARA EL CONTROLLER =====================
 
+    /*
+     * Nombre: getsGeneralesParaBotones
+     * Descripción: Obtiene el botóns y componentes que el Controller necesita para interactuar con la vista.
+     */
     public JButton getBtnCargarArchivo() { 
         return btnCargarArchivo; 
     }
