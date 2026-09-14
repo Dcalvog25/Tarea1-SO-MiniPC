@@ -192,7 +192,12 @@ public class ControllerMiniPC {
             return;
         }
 
-        
+        if(nuevoKernel>= (nuevoTamano-16)){
+            JOptionPane.showMessageDialog(vista,
+                    "El espacio de kernel debe dejar al menos 16 direcciones para el usuario",
+                    "Configuración inválida", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         inicializarMaquina(nuevoTamano, nuevoKernel);
         programaActual = null;
