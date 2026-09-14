@@ -72,13 +72,28 @@ public class ControllerMiniPC {
             List<String> lineas = Files.readAllLines(archivo.toPath());
             programaActual = parser.convertirASM(lineas);
 
-            int espacioDisp = memoria.getTamanoTotal() - memoria.getInicioMemoriaUsuario();
-            if(programaActual.size() > espacioDisp) {
+            if (parser.tieneErrores()) {
+                String mensaje = String.join("\n", parser.getErrores());
                 JOptionPane.showMessageDialog(vista,
-                        "El programa es demasiado grande para la memoria de usuario. " +
-                                "Tamaño del programa: " + programaActual.size() +
-                                ", espacio disponible: " + espacioDisp,
-                        "Error de memoria", JOptionPane.ERROR_MESSAGE);
+                        "Se encontraron líneas inválidas (se omitieron):\n\n" + mensaje,
+                        "Advertencias de validación", JOptionPane.WARNING_MESSAGE);
+            }
+
+            if (programaActual.isEmpty()) {
+                JOptionPane.showMessageDialog(vista,
+                        "Ninguna línea del archivo es válida. No se cargó ningún programa.",
+                        "Archivo vacío o inválido", JOptionPane.ERROR_MESSAGE);
+                programaActual = null;
+                return;
+            }
+
+            int espacioDisponible = memoria.getTamanoTotal() - memoria.getInicioMemoriaUsuario();
+            if (programaActual.size() > espacioDisponible) {
+                JOptionPane.showMessageDialog(vista,
+                        "El programa tiene " + programaActual.size() + " instrucciones, pero solo hay "
+                        + espacioDisponible + " posiciones de memoria de usuario disponibles.",
+                        "Programa demasiado grande", JOptionPane.ERROR_MESSAGE);
+                programaActual = null;
                 return;
             }
 
@@ -97,13 +112,8 @@ public class ControllerMiniPC {
             JOptionPane.showMessageDialog(vista,
                     "No se pudo leer el archivo: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(vista,
-                    "Error en el programa: " + ex.getMessage(),
-                    "Error de validación", JOptionPane.ERROR_MESSAGE);
         }
     }
-
     private void completarAdmision() {
         try {
             cpu.cargarPrograma(programaActual);
