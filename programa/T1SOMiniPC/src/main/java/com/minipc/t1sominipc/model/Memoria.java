@@ -106,6 +106,10 @@ public class Memoria {
     }
     
     public void cargarPrograma(List<Instruccion> programa) {
+
+        if(programa.size() > (tamanoTotal - inicioMemoriaUsuario)){
+            throw new IllegalArgumentException("El programa es demasiado grande para la memoria de usuario.");
+        }
         int direccion = inicioMemoriaUsuario;
         for (Instruccion instr : programa) {
             if (!direccionValidaUsuario(direccion)) {

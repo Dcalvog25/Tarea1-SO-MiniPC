@@ -72,6 +72,16 @@ public class ControllerMiniPC {
             List<String> lineas = Files.readAllLines(archivo.toPath());
             programaActual = parser.convertirASM(lineas);
 
+            int espacioDisp = memoria.getTamanoTotal() - memoria.getInicioMemoriaUsuario();
+            if(programaActual.size() > espacioDisp) {
+                JOptionPane.showMessageDialog(vista,
+                        "El programa es demasiado grande para la memoria de usuario. " +
+                                "Tamaño del programa: " + programaActual.size() +
+                                ", espacio disponible: " + espacioDisp,
+                        "Error de memoria", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             actualizarTablaPrograma();
             bcp.actualizarEstado("Nuevo");
             vista.getLblPID().setText("PID 1");
@@ -79,7 +89,7 @@ public class ControllerMiniPC {
 
             deshabilitarTodosLosBotones();
 
-            Timer timerAdmision = new Timer(900, e -> completarAdmision());
+            Timer timerAdmision = new Timer(1200, e -> completarAdmision());
             timerAdmision.setRepeats(false);
             timerAdmision.start();
 
@@ -95,17 +105,34 @@ public class ControllerMiniPC {
     }
 
     private void completarAdmision() {
-        cpu.cargarPrograma(programaActual);
-        bcp.actualizarEstado("Listo");
-        actualizarTablaMemoria();
-        procesoAdmitido = true;
+        try {
+            cpu.cargarPrograma(programaActual);
+            bcp.actualizarEstado("Listo");
+            actualizarTablaMemoria();
+            procesoAdmitido = true;
 
-        vista.getBtnPasoAPaso().setEnabled(true);
-        vista.getBtnEjecutarTodo().setEnabled(true);
-        vista.getBtnLimpiarReset().setEnabled(true);
-        // btnCargarArchivo y btnConfigurarMemoria siguen deshabilitados: ya hay un proceso en RAM
+            vista.getBtnPasoAPaso().setEnabled(true);
+            vista.getBtnEjecutarTodo().setEnabled(true);
+            vista.getBtnLimpiarReset().setEnabled(true);
 
-        actualizarVista();
+            actualizarVista();
+
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(vista,
+                    "No se pudo cargar el programa a memoria: " + ex.getMessage(),
+                    "Error de admisión", JOptionPane.ERROR_MESSAGE);
+
+            // Revertir todo para que el usuario pueda intentar de nuevo
+            programaActual = null;
+            vista.getModeloPrograma().setRowCount(0);
+            vista.getLblPID().setText("PID --");
+            vista.getLblEstadoProceso().setText("Esperando archivo");
+
+            vista.getBtnCargarArchivo().setEnabled(true);
+            vista.getBtnConfigurarMemoria().setEnabled(true);
+            vista.getBtnLimpiarReset().setEnabled(true);
+            
+        }
     }
 
     private void deshabilitarTodosLosBotones() {
@@ -192,7 +219,7 @@ public class ControllerMiniPC {
             return;
         }
 
-        if(nuevoKernel>= (nuevoTamano-16)){
+        if(nuevoKernel> (nuevoTamano-16)){
             JOptionPane.showMessageDialog(vista,
                     "El espacio de kernel debe dejar al menos 16 direcciones para el usuario",
                     "Configuración inválida", JOptionPane.ERROR_MESSAGE);
