@@ -108,7 +108,7 @@ public class ControllerMiniPC {
         try {
             cpu.cargarPrograma(programaActual);
             bcp.actualizarEstado("Listo");
-            actualizarTablaMemoria();
+            //actualizarTablaMemoria();
             procesoAdmitido = true;
 
             vista.getBtnPasoAPaso().setEnabled(true);
@@ -253,13 +253,43 @@ public class ControllerMiniPC {
     private void actualizarTablaMemoria() {
         DefaultTableModel modelo = vista.getModeloMemoria();
         modelo.setRowCount(0);
-        int inicio = memoria.getInicioMemoriaUsuario();
-        int fin = inicio + programaActual.size();
 
-        for (int direccion = inicio; direccion < fin; direccion++) {
-            Instruccion instr = memoria.leerInstruccion(direccion);
-            String textoInstr = (instr != null) ? instr.getLineaOriginal() : "";
-            modelo.addRow(new Object[]{direccion, textoInstr, memoria.leer(direccion)});
+        int finKernel = memoria.getFinMemoriaKernel();
+        int inicioUsuario = memoria.getInicioMemoriaUsuario();
+
+        if(programaActual != null){ 
+            int pos = 0;
+            while (pos <= finKernel) {
+                String label = memoria.getLabel(pos);
+
+                if (label != null && !label.isEmpty()) {
+                    modelo.addRow(new Object[]{String.valueOf(pos), label, memoria.leer(pos)});
+                    pos++;
+                } else {
+                    int inicioLibre = pos;
+                    while (pos <= finKernel && (memoria.getLabel(pos) == null || memoria.getLabel(pos).isEmpty())) {
+                        pos++;
+                    }
+                    int finLibre = pos - 1;
+                    String rango = (inicioLibre == finLibre)
+                            ? String.valueOf(inicioLibre)
+                            : inicioLibre + "-" + finLibre;
+                    modelo.addRow(new Object[]{rango, "Kernel Libre", "-"});
+                }
+            }
+
+        }
+        
+
+        // ===== Sección USUARIO: instrucciones cargadas =====
+        if (programaActual != null) {
+            int fin = inicioUsuario + programaActual.size();
+            for (int direccion = inicioUsuario; direccion < fin; direccion++) {
+                Instruccion instr = memoria.leerInstruccion(direccion);
+                String textoInstr = (instr != null) ? instr.getLineaOriginal() : "";
+                String valorMemoria = formatoValorMemoria(memoria.leer(direccion));
+                modelo.addRow(new Object[]{direccion, textoInstr, valorMemoria});
+            }
         }
     }
 
@@ -272,6 +302,8 @@ public class ControllerMiniPC {
         vista.getLblCX().setText(String.valueOf(cpu.getCX()));
         vista.getLblDX().setText(String.valueOf(cpu.getDX()));
         vista.getLblEstadoProceso().setText(bcp.getEstado());
+
+        actualizarTablaMemoria();
     }
 
     private String formatearBinario(String binario) {
@@ -283,5 +315,10 @@ public class ControllerMiniPC {
             }
         }
         return sb.toString();
+    }
+
+    private String formatoValorMemoria(int valor) {
+        String binario = String.format("%16s", Integer.toBinaryString(valor)).replace(' ', '0');
+        return formatearBinario(binario);
     }
 }

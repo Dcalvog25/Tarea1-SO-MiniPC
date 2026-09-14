@@ -67,19 +67,16 @@ public class MiniPCFrame extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(BG_DARK);
 
-        JLabel titulo = new JLabel("Mini PC Simulator");
+        JLabel titulo = new JLabel("Mini PC Simulator - Tarea 1 de Sistemas Operativos");
         titulo.setFont(new Font("SansSerif", Font.BOLD, 20));
         titulo.setForeground(TEXT_LIGHT);
 
-        JLabel subtitulo = new JLabel("Principios de Sistemas Operativos");
-        subtitulo.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        subtitulo.setForeground(TEXT_MUTED);
+        
 
         JPanel textos = new JPanel();
         textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
         textos.setBackground(BG_DARK);
         textos.add(titulo);
-        textos.add(subtitulo);
 
         panel.add(textos, BorderLayout.WEST);
         return panel;
@@ -130,13 +127,13 @@ public class MiniPCFrame extends JFrame {
 
         JLabel lblTamano = crearEtiquetaCampo("Tamaño total de RAM");
         lblTamano.setAlignmentX(Component.LEFT_ALIGNMENT);
-        spinnerTamanoRAM = new JSpinner(new SpinnerNumberModel(256, 128, 1024, 32));
+        spinnerTamanoRAM = new JSpinner(new SpinnerNumberModel(256, 32, 1024, 32));
         spinnerTamanoRAM.setAlignmentX(Component.LEFT_ALIGNMENT);
         spinnerTamanoRAM.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
         JLabel lblKernel = crearEtiquetaCampo("Espacio para Kernel");
         lblKernel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        spinnerKernel = new JSpinner(new SpinnerNumberModel(64, 16, 1008, 8));
+        spinnerKernel = new JSpinner(new SpinnerNumberModel(64, 8, 512, 8));
         spinnerKernel.setAlignmentX(Component.LEFT_ALIGNMENT);
         spinnerKernel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
@@ -198,7 +195,7 @@ public class MiniPCFrame extends JFrame {
 
         panel.add(crearEtiquetaSeccion("MEMORIA PRINCIPAL (RAM)"), BorderLayout.NORTH);
 
-        modeloMemoria = new DefaultTableModel(new Object[]{"Posición", "Instrucción ASM", "Valor en memoria"}, 0) {
+        modeloMemoria = new DefaultTableModel(new Object[]{"Posición", "Instrucción", "Valor en memoria"}, 0) {
             @Override
             public boolean isCellEditable(int row, int col) {
                 return false;
@@ -238,7 +235,7 @@ public class MiniPCFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(BG_DARK);
-        panel.setPreferredSize(new Dimension(240, 0));
+        panel.setPreferredSize(new Dimension(320, 0));
         panel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 0));
 
         panel.add(crearEtiquetaSeccion("PROCESO"));
@@ -259,7 +256,7 @@ public class MiniPCFrame extends JFrame {
         panel.setBackground(BG_CARD);
         panel.setBorder(BorderFactory.createEmptyBorder(14, 14, 14, 14));
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.setMaximumSize(new Dimension(240, 100));
+        panel.setMaximumSize(new Dimension(320, 100));
 
         lblPID = new JLabel("PID --");
         lblPID.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -280,15 +277,15 @@ public class MiniPCFrame extends JFrame {
         JPanel panel = new JPanel(new GridLayout(4, 2, 8, 8));
         panel.setBackground(BG_DARK);
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        panel.setMaximumSize(new Dimension(240, 220));
+        panel.setMaximumSize(new Dimension(320, 240));
 
-        lblPC = crearValorRegistro();
-        lblIR = crearValorRegistro();
-        lblAC = crearValorRegistro();
-        lblAX = crearValorRegistro();
-        lblBX = crearValorRegistro();
-        lblCX = crearValorRegistro();
-        lblDX = crearValorRegistro();
+        lblPC = crearValorRegistro(14);
+        lblIR = crearValorRegistro(11); 
+        lblAC = crearValorRegistro(14);
+        lblAX = crearValorRegistro(14);
+        lblBX = crearValorRegistro(14);
+        lblCX = crearValorRegistro(14);
+        lblDX = crearValorRegistro(14);
 
         panel.add(crearTarjetaRegistro("PC", lblPC));
         panel.add(crearTarjetaRegistro("IR", lblIR));
@@ -316,14 +313,14 @@ public class MiniPCFrame extends JFrame {
         return panel;
     }
 
-    private JLabel crearValorRegistro() {
+    private JLabel crearValorRegistro(int tamanoFuente) {
         JLabel lbl = new JLabel("0");
-        lbl.setFont(new Font("Monospaced", Font.BOLD, 14));
+        lbl.setFont(new Font("Monospaced", Font.BOLD, tamanoFuente));
         lbl.setForeground(ACCENT_GREEN);
         return lbl;
     }
 
-    // ===================== EXTRAS DE ESTILO =====================
+    // ===================== HELPERS DE ESTILO =====================
 
     private JLabel crearEtiquetaSeccion(String texto) {
         JLabel lbl = new JLabel(texto);
@@ -350,7 +347,7 @@ public class MiniPCFrame extends JFrame {
         return btn;
     }
 
-    // ===================== PARA EL CONTROLLER =====================
+    // ===================== EXTRAS PARA EL CONTROLLER =====================
 
     public JButton getBtnCargarArchivo() { 
         return btnCargarArchivo; 
@@ -409,6 +406,7 @@ public class MiniPCFrame extends JFrame {
     public JLabel getLblDX() { 
         return lblDX; 
     }
+
 
     // Prueba rápida de solo la vista, sin Controller todavía
     public static void main(String[] args) {

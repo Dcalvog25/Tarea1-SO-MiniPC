@@ -55,6 +55,7 @@ public class CPU {
         bcp.actualizarEstado("Ejecutando");
       
         bcp.avanzarContador();
+        bcp.actualizarRegistros(PC, AC, AX, BX, CX, DX);
         return true;
     }
 

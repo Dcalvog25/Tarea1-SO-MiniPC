@@ -104,6 +104,13 @@ public class Memoria {
         memoriaLabels[direccion] = label;
         return true;
     }
+
+    public String getLabel(int direccion) {
+    if (!direccionValida(direccion)) {
+        return "";
+    }
+    return memoriaLabels[direccion];
+}
     
     public void cargarPrograma(List<Instruccion> programa) {
 
