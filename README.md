@@ -65,7 +65,7 @@ STORE AX
 MOV BX, -8
 ```
 
-Si alguna línea no cumple con el formato esperado (operador desconocido, registro inválido, cantidad de argumentos incorrecta, valor fuera de rango, etc.), el programa la rechaza y le avisa al usuario con el número de línea y el motivo, sin detener la carga de las demás instrucciones válidas.
+Si alguna línea no cumple con el formato esperado (operador desconocido, registro inválido, cantidad de argumentos incorrecta, valor fuera de rango, etc.), el programa la rechaza y le avisa al usuario con el número de línea y el motivo, deteniendo también la carga de las demás instrucciones válidas.
 
 ## Estructura del proyecto
 
