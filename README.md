@@ -7,7 +7,10 @@
 
 ---
 
-## ¿Qué es esto?
+## Descripción del Proyecto
+
+<img width="1917" height="1017" alt="image" src="https://github.com/user-attachments/assets/4f38a702-a9c8-42fb-8996-dfa0765ea034" />
+
 
 Es un simulador de una mini computadora, hecho en Java con interfaz gráfica en Swing (NetBeans). La idea es tomar un archivo de código ensamblador (`.asm`), reconocer sus instrucciones, cargarlas en una memoria simulada, y ejecutarlas paso a paso (o de una sola vez) siguiendo el ciclo fetch-decode-execute que se explica en el libro de Stallings (*Operating Systems: Internals and Design Principles*).
 
