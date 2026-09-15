@@ -100,16 +100,18 @@ public class ControllerMiniPC {
             programaActual = parser.convertirASM(lineas);
 
             if (parser.tieneErrores()) {
-                String mensaje = String.join("\n", parser.getErrores());
-                JOptionPane.showMessageDialog(vista,
-                        "Se encontraron líneas inválidas (se omitieron):\n\n" + mensaje,
-                        "Advertencias de validación", JOptionPane.WARNING_MESSAGE);
+                String mensaje = "ARCHIVO NO ES PERMITIDO POR ERRORES\n\n"
+                        + String.join("\n", parser.getErrores());
+                JOptionPane.showMessageDialog(vista, mensaje,
+                        "Archivo rechazado", JOptionPane.ERROR_MESSAGE);
+                programaActual = null;
+                return; // no se carga nada
             }
 
             if (programaActual.isEmpty()) {
                 JOptionPane.showMessageDialog(vista,
-                        "Ninguna línea del archivo es válida. No se cargó ningún programa.",
-                        "Archivo vacío o inválido", JOptionPane.ERROR_MESSAGE);
+                        "El archivo no contiene ninguna instrucción.",
+                        "Archivo vacío", JOptionPane.ERROR_MESSAGE);
                 programaActual = null;
                 return;
             }
