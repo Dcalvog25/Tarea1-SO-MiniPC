@@ -146,13 +146,13 @@ public class MiniPCFrame extends JFrame {
 
         JLabel lblTamano = crearEtiquetaCampo("Tamaño total de RAM");
         lblTamano.setAlignmentX(Component.LEFT_ALIGNMENT);
-        spinnerTamanoRAM = new JSpinner(new SpinnerNumberModel(256, 32, 1024, 32));
+        spinnerTamanoRAM = new JSpinner(new SpinnerNumberModel(256, 128, 1024, 8));
         spinnerTamanoRAM.setAlignmentX(Component.LEFT_ALIGNMENT);
         spinnerTamanoRAM.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
         JLabel lblKernel = crearEtiquetaCampo("Espacio para Kernel");
         lblKernel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        spinnerKernel = new JSpinner(new SpinnerNumberModel(64, 8, 512, 8));
+        spinnerKernel = new JSpinner(new SpinnerNumberModel(64, 16, 512, 8));
         spinnerKernel.setAlignmentX(Component.LEFT_ALIGNMENT);
         spinnerKernel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
 
